@@ -18,19 +18,20 @@ var Post = React.createClass({
           <h4> { this.props.post.author } </h4>
         </div>
         <div className="image">
-          <img src="https://placekitten.com/200/200" alt=""></img>
-          { this.props.post.picture }
+          {this.props.post.picture !== "" ? <img src={ this.props.post.picture } alt=""></img> : <img src="http://placekitten.com/250/300" alt=""/> }
+          
         </div>
         <div className="description"> { this.props.post.description }</div>
       </div>
+      { Object.keys(this.props.post.comments).map((id) => {
+        return (
+          <PostComment comment={ this.props.post.comments[id] } />
+        )
+      })}
     )
   },
 })
 
 export default Post
 
-// { Object.keys(this.props.post.comments).map((id) => {
-//   return (
-//     <PostComment>
-//   )
-// })}
+

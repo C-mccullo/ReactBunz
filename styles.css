@@ -5,7 +5,7 @@ turq: #5B8EA4;
 mint-backgroung: #CEE6E5;
 purple-drank: #8A8BE4;
 heavy-mint: #83C4BF;
-bright-red: ##FC767A;
+bright-red: #FC767A;
 canary: #FDCC2D;
 */
 
@@ -38,12 +38,24 @@ input {
   padding: 5px 10px;
 }
 
-button {
+.button, .submit {
   background-color: #83C4BF;
   border: none;
   color: #022565;
   font-weight: bold;
   border-radius: 5px;
+}
+.delete {
+  background-color: white;
+  color: #CEE6E5;
+  border: none;
+}
+.delete:hover {
+  color: #FC767A;
+}
+
+.nav-log-out {
+  float: right;
 }
 
 .header-bar {
@@ -55,9 +67,11 @@ button {
   color: #022565;
   background-color: #8A8BE4;
   margin: 0;
+  padding: 15px;
 }
 .header-bar h2 {
-  margin: 15px;
+  margin: 0px;
+  float: left;
 }
 
 .flex-container {
@@ -72,14 +86,20 @@ button {
   background-color: #FFF;
   box-shadow: 2px 1px 3px 1px rgba(0, 0, 0, 0.2);
   margin: 10px;
-  width: calc(33%:);
-  min-width: 300px;
+  width: 300px;
 }
 
-.flex-child h4 {
-  font-size: 
+.flex-child .author h4 {
+  font-size: 14px;
+  font-weight: 300;
+}
+.flex-child .image {
+  text-align: center;
 }
 
+.flex-child .image img {
+  max-width: 100%;
+}
 .newPost {
   position: relative;
   padding: 30px 0px;
@@ -93,10 +113,6 @@ button {
   width: 80%;
 }
 
-.post {
-  border-bottom: solid 1px #CCC;
-  padding: 20px 0;
-}
 .post .author {
   font-weight: bold;
 }

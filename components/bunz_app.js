@@ -4,6 +4,7 @@ import Login from './logIn';
 import Post from './post';
 import NewPost from './newPost';
 
+
 var BunzApp = React.createClass({
   getInitialState: function() {
     return {
@@ -32,6 +33,7 @@ var BunzApp = React.createClass({
         <div>
           <div className="header-bar">
             <h2>Welcome, { this.state.currentUser }</h2>
+            <button className="button nav-log-out" onClick={ this.logout }>Log Out</button>
           </div> 
 
           <div className="flex-container">
@@ -57,6 +59,10 @@ var BunzApp = React.createClass({
     this.setState({ loggedIn: true, currentUser: email });
   },
 
+  logout: function() {
+    this.setState({ loggedIn: false, currentUser: "" });
+  },
+
   // Sets the state of currentUser to email
   setCurrentUser: function(event) {
     var currentUser = this.state.currentUser
@@ -64,13 +70,13 @@ var BunzApp = React.createClass({
     this.setState({ currentUser: event.target.value });
   },
 
-  // Adds 
+  // Adds the newPost Object to the posts Array
   addPost: function(newPost) {
     newPost.author = this.state.currentUser
     console.log(newPost);
     this.firebaseRef.push(newPost);
   },
-  // Can Add this function to post Component
+  // Can move this function to post Component **** Will also need to delete instance of picture from File-stack;
   deletePost: function(id) {
     this.firebaseRef.child(id).remove();
   },

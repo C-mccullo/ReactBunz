@@ -33,7 +33,7 @@ var Login = React.createClass({
         <input type='password' className='form-control' name='password' value={ this.state.password } onChange={ this.setPassword } />
       </div>
       <div>
-        <button onClick={ this.login  }>
+        <button className="button" onClick={ this.login  }>
           { this.state.mode == 'login' ? "Login" : "Sign Up" }
         </button>
       </div>

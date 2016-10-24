@@ -4,6 +4,8 @@ import { Router, Route, browserHistory, Link, IndexRoute } from 'react-router';
 import BunzApp from "./components/bunz_app";
 import Login from './components/logIn';
 import firebase from'firebase';
+import filepicker from 'filepicker-js';
+
 // Initialize Firebase
 var config = {
 	apiKey: "AIzaSyD5T1HUes_FpntKMWg7pqshsl-Oa5UYNRU",
@@ -14,6 +16,10 @@ var config = {
 };
 firebase.initializeApp(config);
 
+// ****************************************************
+// 						For Filestack Initialization
+// ****************************************************
+filepicker.setKey("AZ9lOpFRSXqONgNMydFumz");
 
 // ****************************************************
 // 						START REACTDOM.render APP
