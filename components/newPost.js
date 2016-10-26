@@ -21,7 +21,6 @@ var NewPost = React.createClass({
 				<input type='text' name="title" value={ this.state.newPost.title } onChange={ this.updateField } placeholder="Title" />
 				<button className="button" onClick={ this.addPicture }>Add Image</button>
 				<input type='text' name="description" value={ this.state.newPost.description } onChange={ this.updateField } placeholder="Description" />
-
 				<button className="submit" onClick={ () => this.props.onAddPost(this.state.newPost) }>Add Message</button>
 			</div>
 		)
@@ -54,14 +53,6 @@ var NewPost = React.createClass({
 			this.setState({ newPost: newPost });
 		})
 	}
-
-	// updateNewPostTitle: function(event) {
-  //   var newPost = this.state.newPost;
-  //   console.log(newPost.title);
-  //   newPost.title = event.target.value;
-  //   this.setState({ newPost: newPost });
-  // }
-
 })
 
 export default NewPost 

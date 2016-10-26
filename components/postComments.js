@@ -10,3 +10,5 @@ var PostComment = React.createClass({
 		)
 	}
 })
+
+export default PostComment

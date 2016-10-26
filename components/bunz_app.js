@@ -9,10 +9,11 @@ var BunzApp = React.createClass({
   getInitialState: function() {
     return {
       newPost: {
-        title: "",
-        description: "",
-        deal: false,
-        picture: "" 
+        // title: "",
+        // description: "",
+        // deal: false,
+        // picture: "",
+        // comment: "this is the first comment"
       },
       posts: [],
       currentUser: null,
@@ -40,15 +41,16 @@ var BunzApp = React.createClass({
             { Object.keys(posts).map((id) => {
               console.log(posts[id]);
               return (
-                <Post key={ id }
+                <Post key={id}
                       currentUser = { this.state.currentUser }
                       post={ posts[id] }
                       // Can import firebase into Post component and have post talk to firebase directly to delete 
-                      onDeletePost = { () => this.deletePost(id) } />
+                      onDeletePost = { () => this.deletePost(id) }
+                      onCommentAdded = { (comment) => this.addComment(comment,id) } />
               )
             })}
           </div>
-          <NewPost onAddPost={ this.addPost } />            
+          <NewPost onAddPost={ this.addPost }/>        
         </div>
       )
     }
@@ -81,6 +83,17 @@ var BunzApp = React.createClass({
     this.firebaseRef.child(id).remove();
   },
 
+  addComment: function(comment, id) {
+    var postRef = this.firebaseRef.child(id);
+    var post = this.state.posts[id];
+    if (typeof post.comments === 'undefined') {
+      post.comments = []
+    }
+    post.comments.push({ author: this.state.currentUser, message: comment });
+    postRef.set(post);
+    this.setState({ posts: this.state.posts });
+  },
+
   componentDidMount: function() {
     var component = this;
     // reference to the database that we want
@@ -100,8 +113,7 @@ var BunzApp = React.createClass({
 
       this.setState({ posts: posts });
     });
-  }
-  
+  } 
 })
 
 module.exports = BunzApp;
