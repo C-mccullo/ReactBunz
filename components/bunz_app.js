@@ -1,9 +1,11 @@
 import React from 'react';
+import { browserHistory, Link } from 'react-router';
 import firebase from 'firebase';
+
 import Login from './logIn';
 import Post from './post';
 import NewPost from './newPost';
-
+import PostList from './PostList';
 
 var BunzApp = React.createClass({
   getInitialState: function() {
@@ -22,67 +24,25 @@ var BunzApp = React.createClass({
   },
 
   render: function() {
-
+    console.log(this.props.children);
     if (!this.state.loggedIn) {
-      // This will be the login component
       return <Login onLogin={ this.login } />
     } else {
-
-      var posts = this.state.posts;
 
       return (
         <div>
           <div className="header-bar">
             <h2>Welcome, { this.state.currentUser }</h2>
+            <Link to="/new-post" > Make a New Post</Link>
             <button className="button nav-log-out" onClick={ this.logout }>Log Out</button>
           </div> 
 
-          <div className="flex-container">
-            { Object.keys(posts).map((id) => {
-              console.log(posts[id]);
-              return (
-                <Post key={id}
-                      currentUser = { this.state.currentUser }
-                      post={ posts[id] }
-                      // Can import firebase into Post component and have post talk to firebase directly to delete 
-                      onDeletePost = { () => this.deletePost(id) }
-                      onCommentAdded = { (comment) => this.addComment(comment,id) } />
-              )
-            })}
-          </div>
-          <NewPost onAddPost={ this.addPost }/>        
+          { this.props.children }
+
         </div>
       )
     }
   },
-  
-  // sets the state of LoggedIn to true --> the list of posts the gets returned
-  login: function(email) {
-    this.setState({ loggedIn: true, currentUser: email });
-  },
-
-  logout: function() {
-    this.setState({ loggedIn: false, currentUser: "" });
-  },
-
-  // Sets the state of currentUser to email
-  setCurrentUser: function(event) {
-    var currentUser = this.state.currentUser
-    console.log(currentUser)
-    this.setState({ currentUser: event.target.value });
-  },
-
-  // Adds the newPost Object to the posts Array
-  addPost: function(newPost) {
-    newPost.author = this.state.currentUser
-    console.log(newPost);
-    this.firebaseRef.push(newPost);
-  },
-  // Can move this function to post Component **** Will also need to delete instance of picture from File-stack;
-  deletePost: function(id) {
-    this.firebaseRef.child(id).remove();
-  },
-
   addComment: function(comment, id) {
     var postRef = this.firebaseRef.child(id);
     var post = this.state.posts[id];
@@ -93,27 +53,87 @@ var BunzApp = React.createClass({
     postRef.set(post);
     this.setState({ posts: this.state.posts });
   },
+  
+  login: function(email) {
+    this.setState({ loggedIn: true, currentUser: email });
+  },
+
+  setCurrentUser: function(event) {
+    var currentUser = this.state.currentUser
+    this.setState({ currentUser: event.target.value });
+  },
+
+  logout: function() {
+    this.setState({ loggedIn: false, currentUser: "" });
+  },
+
+  // Adds the newPost Object to the posts Array
+  addPost: function(newPost) {
+    newPost.author = this.state.currentUser
+    console.log(newPost);
+    this.firebaseRef.push(newPost);
+  },
+  deletePost: function(id) {
+    this.firebaseRef.child(id).remove();
+  },
+
+  // finding the post with the id in firebase and application state, if post comments is undefined turn it into an array. then push the comment object (author = current user) to the comment array on post. Update state and firebase.  
 
   componentDidMount: function() {
-    var component = this;
-    // reference to the database that we want
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({loggedIn: true, currentUser: user.email});
+      } else {
+        browserHistory.push('/login');
+      }
+    })
+    // reference to the data (posts) that we want, stored in a variable
     this.firebaseRef = firebase.database().ref("posts");
+
+    // this is assigning the key that firebase generates to the key of the message
     this.firebaseRef.on("child_added", (dataSnapshot) => {
-      // this is assigning the key that firebase generates to the key of the message
       var posts = this.state.posts;
       posts[dataSnapshot.key] = dataSnapshot.val();
-
       this.setState({ posts: posts });
       window.scrollTo(0, document.body.clientHeight);
     });
 
     this.firebaseRef.on("child_removed", (dataSnapshot) => {
       var posts = this.state.posts;
-      delete posts[dataSnapshot.key];
 
+      delete posts[dataSnapshot.key];
       this.setState({ posts: posts });
     });
   } 
 })
 
 module.exports = BunzApp;
+
+// { React.cloneElement(this.props.children, {
+//   currentUser: this.state.currentUser,
+//   posts: this.state.posts,
+//   newPost: this.state.newPost,
+//   onCommentAdded: { (comment) => this.addComment(comment,id) },
+//   firebaseRef: this.firebaseRef,
+//   onDeletePost: { (id) => this.deletePost(id) }
+//   // ^ 
+//   // this is really handy because you can push to firebase from child components and the firebase component will be notified and pass back information to the parent, resulting in state being updated without having to bubble up functions back to the App component
+//   // *** add any additional props you want your children to have here as well ***
+// }) } 
+
+// <div className="flex-container">
+//   {/* This is the Working map function for Post right now */}
+//   { Object.keys(posts).map((id) => {
+//     return (
+//       <Post key={id}
+//             currentUser = { this.state.currentUser }
+//             post={ posts[id] } 
+//             onDeletePost = { () => this.deletePost(id) }
+//             onCommentAdded = { (comment) => this.addComment(comment,id) } />
+//     )
+//   })}
+// </div>
+
+// <PostList posts={ this.state.posts } 
+//           onAddComment={ () => this.addComment(comment, id) }/>
+// <NewPost onAddPost={ this.addPost }/>

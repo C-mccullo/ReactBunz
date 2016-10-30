@@ -34,6 +34,7 @@ var NewPost = React.createClass({
 
 	addPicture: function() {
 		var newPost = this.state.newPost;
+
 		filepicker.pick(
 			{
 			  mimetype: 'image/*',
@@ -41,10 +42,9 @@ var NewPost = React.createClass({
 			  container: 'modal',
 			  services: ['COMPUTER']
 			},
-
 			function(Blob){
 			  newPost.picture = Blob.url.toString();
-			  console.log(newPost);
+			  console.log(newPost.picture);
 			},
 			function(FPError){
 			 console.log(FPError.toString());
@@ -53,6 +53,6 @@ var NewPost = React.createClass({
 			this.setState({ newPost: newPost });
 		})
 	}
-})
+});
 
 export default NewPost 

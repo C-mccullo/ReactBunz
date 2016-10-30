@@ -1,5 +1,6 @@
 import React from 'react';
 import firebase from 'firebase';
+import { browserHistory } from 'react-router';
 
 var Login = React.createClass({
   getInitialState: function() {
@@ -43,28 +44,46 @@ var Login = React.createClass({
   setEmail: function(evt) { this.setState({ email: evt.target.value }); },
   setPassword: function(evt) { this.setState({ password: evt.target.value }); },
   setMode: function(evt) { this.setState({ mode: evt.target.value }); },
+
   // THIS IS THE LOGIN FUNCTION YOU WILL NEED
+
   login: function() {
-    var component = this;
+    var result;
     if (this.state.mode == 'login') {
-      firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-      .then(function() {
-        component.props.onLogin(component.state.email);
-        browserHistory.push('/')
-      })
-      .catch(function(error) {
-        component.setState({ error: error.message })
-      })
+      result = firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
     } else {
-      firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(function() {
-        component.props.onLogin(component.state.email)
-      })
-      .catch(function(error) {
-        component.setState({ error: error.message })
-      })
+      result = firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
     }
+    // After firebase has created or logged in the user it will push towards the route of app component and not be redirected towards the /login route.
+    result.then((data) => {
+      browserHistory.push('/');
+    })
+    .catch((error) => {
+      this.setState({error: error.message});
+    })
   }
+
+  // login: function() {
+  //   var component = this;
+  //   if (this.state.mode == 'login') {
+  //     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+  //     .then(function() {
+  //       component.props.onLogin(component.state.email);
+  //       browserHistory.push('/')
+  //     })
+  //     .catch(function(error) {
+  //       component.setState({ error: error.message })
+  //     })
+  //   } else {
+  //     firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+  //     .then(function() {
+  //       component.props.onLogin(component.state.email)
+  //     })
+  //     .catch(function(error) {
+  //       component.setState({ error: error.message })
+  //     })
+  //   }
+  // }
 })
 
 export default Login;
