@@ -5,7 +5,7 @@ import firebase from 'firebase';
 import Login from './logIn';
 import Post from './post';
 import NewPost from './newPost';
-import PostList from './PostList';
+import PostList from './postList';
 
 var BunzApp = React.createClass({
   getInitialState: function() {
@@ -25,6 +25,7 @@ var BunzApp = React.createClass({
 
   render: function() {
     console.log(this.props.children);
+
     if (!this.state.loggedIn) {
       return <Login onLogin={ this.login } />
     } else {
