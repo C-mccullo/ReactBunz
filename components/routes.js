@@ -13,9 +13,10 @@ var Routes = React.createClass({
     return <Router history={ browserHistory }>
       <Route path='/login' component={ Login } />
       <Route path='/' component={ BunzApp }>
-	      <IndexRoute component={ PostList } />
+      	<IndexRoute component={ PostList }/>
 				<Route path='/new-post' component={ NewPost } />
       </Route>
+      <Route path='/post-list' component={ PostList }></Route>
     </Router>
   }
 });

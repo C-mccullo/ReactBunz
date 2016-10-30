@@ -3,9 +3,9 @@ import { browserHistory, Link } from 'react-router';
 import firebase from 'firebase';
 
 import Login from './logIn';
+import PostList from './postList';
 import Post from './post';
 import NewPost from './newPost';
-import PostList from './postList';
 
 var BunzApp = React.createClass({
   getInitialState: function() {
@@ -22,7 +22,7 @@ var BunzApp = React.createClass({
       loggedIn: false
     }
   },
-
+  
   render: function() {
     console.log(this.props.children);
 
@@ -38,12 +38,15 @@ var BunzApp = React.createClass({
             <button className="button nav-log-out" onClick={ this.logout }>Log Out</button>
           </div> 
 
-          { this.props.children }
 
+          <PostList posts={ this.state.posts } />
+          
+          <NewPost onAddPost={ this.addPost }/>
         </div>
       )
     }
   },
+  // *** Need to pass addComment function to PostList as props ***
   addComment: function(comment, id) {
     var postRef = this.firebaseRef.child(id);
     var post = this.state.posts[id];
@@ -54,9 +57,11 @@ var BunzApp = React.createClass({
     postRef.set(post);
     this.setState({ posts: this.state.posts });
   },
-  
+  // **************************************************************
+
   login: function(email) {
     this.setState({ loggedIn: true, currentUser: email });
+    console.log(this.state.currentUser);
   },
 
   setCurrentUser: function(event) {
@@ -78,8 +83,8 @@ var BunzApp = React.createClass({
     this.firebaseRef.child(id).remove();
   },
 
-  // finding the post with the id in firebase and application state, if post comments is undefined turn it into an array. then push the comment object (author = current user) to the comment array on post. Update state and firebase.  
 
+  // finding the post with the id in firebase and application state, if post comments is undefined turn it into an array. then push the comment object (author = current user) to the comment array on post. Update state and firebase.  
   componentDidMount: function() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -135,6 +140,6 @@ module.exports = BunzApp;
 //   })}
 // </div>
 
-// <PostList posts={ this.state.posts } 
-//           onAddComment={ () => this.addComment(comment, id) }/>
-// <NewPost onAddPost={ this.addPost }/>
+<PostList posts={ this.state.posts } 
+          onAddComment={ () => this.addComment(comment, id) }/>
+<NewPost onAddPost={ this.addPost }/>
