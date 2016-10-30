@@ -37,15 +37,17 @@ var BunzApp = React.createClass({
             <Link to="/new-post" > Make a New Post</Link>
             <button className="button nav-log-out" onClick={ this.logout }>Log Out</button>
           </div> 
-
-
-          <PostList posts={ this.state.posts } />
           
+          {/* this.props.children */}
+
+          {/* PostList and NewPost will be the Nested Routes of BunzApp (Not Working!) */}
+          <PostList posts={ this.state.posts } />
           <NewPost onAddPost={ this.addPost }/>
         </div>
       )
     }
   },
+
   // *** Need to pass addComment function to PostList as props ***
   addComment: function(comment, id) {
     var postRef = this.firebaseRef.child(id);
@@ -84,7 +86,7 @@ var BunzApp = React.createClass({
   },
 
 
-  // finding the post with the id in firebase and application state, if post comments is undefined turn it into an array. then push the comment object (author = current user) to the comment array on post. Update state and firebase.  
+  // Finding the post with the id in firebase and application state, if post comments is 'undefined' turn it into an array. Push the comment object (author: current user, message: comment) to the comments array on post. Update state and firebase.  
   componentDidMount: function() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -93,17 +95,17 @@ var BunzApp = React.createClass({
         browserHistory.push('/login');
       }
     })
-    // reference to the data (posts) that we want, stored in a variable
+    // Reference to the data of posts that we want in firebase, stored in a variable
     this.firebaseRef = firebase.database().ref("posts");
 
-    // this is assigning the key that firebase generates to the key of the message
+    // Assigning a key that firebase generates to the posts in posts array when it is updated
     this.firebaseRef.on("child_added", (dataSnapshot) => {
       var posts = this.state.posts;
       posts[dataSnapshot.key] = dataSnapshot.val();
       this.setState({ posts: posts });
       window.scrollTo(0, document.body.clientHeight);
     });
-
+    // Removing the post with a certain key from firebase and updating state
     this.firebaseRef.on("child_removed", (dataSnapshot) => {
       var posts = this.state.posts;
 
@@ -123,9 +125,12 @@ module.exports = BunzApp;
 //   firebaseRef: this.firebaseRef,
 //   onDeletePost: { (id) => this.deletePost(id) }
 //   // ^ 
-//   // this is really handy because you can push to firebase from child components and the firebase component will be notified and pass back information to the parent, resulting in state being updated without having to bubble up functions back to the App component
-//   // *** add any additional props you want your children to have here as well ***
+//   // *** add any additional props you want your children to have go here as well ***
 // }) } 
+
+// ******************************************************************************
+//        ↓  T H I S  O N E  W O R K S  I N  R E N D E R  F U N C T I O N ↓
+// ******************************************************************************
 
 // <div className="flex-container">
 //   {/* This is the Working map function for Post right now */}
@@ -139,7 +144,3 @@ module.exports = BunzApp;
 //     )
 //   })}
 // </div>
-
-<PostList posts={ this.state.posts } 
-          onAddComment={ () => this.addComment(comment, id) }/>
-<NewPost onAddPost={ this.addPost }/>
