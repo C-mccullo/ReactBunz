@@ -13,12 +13,20 @@ var PostList = React.createClass({
             <Post key = {id}
                   currentUser = { this.props.currentUser }
                   post = { posts[id] }
-                  onDeletePost = { this.props.onDeletePost }
-                  onCommentAdded = { (id) => this.props.onCommentAdded } />
+                  onDeletePost = { this.deletePost.bind(this, id) }
+                  onCommentAdded = { this.addComment.bind(this, id) } />
           )
         })}
       </div>
     )
+  },
+
+  addComment: function(id, comment) {
+    console.log(id, comment);
+    this.props.onCommentAdded(comment, id);
+  },
+  deletePost: function(id) {
+    this.props.onDeletePost(id);
   }
 })
 

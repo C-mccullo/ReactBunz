@@ -38,11 +38,16 @@ var BunzApp = React.createClass({
             <button className="button nav-log-out" onClick={ this.logout }>Log Out</button>
           </div> 
           
-          {/* this.props.children */}
+          {React.cloneElement(this.props.children, {
+            posts: this.state.posts,
+            onAddPost: this.addPost,
+            onCommentAdded: this.addComment,
+            onDeletePost: this.deletePost,
+            currentUser: this.state.currentUser
+          })}
 
           {/* PostList and NewPost will be the Nested Routes of BunzApp (Not Working!) */}
-          <PostList posts={ this.state.posts } />
-          <NewPost onAddPost={ this.addPost }/>
+
         </div>
       )
     }
@@ -50,6 +55,7 @@ var BunzApp = React.createClass({
 
   // *** Need to pass addComment function to PostList as props ***
   addComment: function(comment, id) {
+    console.log(comment + id)
     var postRef = this.firebaseRef.child(id);
     var post = this.state.posts[id];
     if (typeof post.comments === 'undefined') {
