@@ -1,13 +1,6 @@
 import React from 'react';
-import NewComment from './newComment';
-import PostComment from './postComments';
 
-// Import Firebase if you want to Post component to interact with Firebase directly to remove Post
-// import firebase from 'firebase';
-
-// if not concerned with state, try using const!!!
-
-var Post = React.createClass({
+var IndividualPost = React.createClass({
   render: function() {
     return(
       <div className="post flex-child">
@@ -27,14 +20,13 @@ var Post = React.createClass({
         <div className="description"> { this.props.post.description }</div>
         <div className="comments">
           { typeof(this.props.post.comments) !== 'undefined' ? 
-            <h5>{ this.props.post.comments.length } comments</h5> : null
+            <postComments comment={ this.props.post.comments }/> : null
           }
         </div>
         <NewComment onCommentAdded={ this.props.onCommentAdded }/>
       </div>
     )
-  },
+  }
 })
 
-export default Post;
-
+export default IndividualPost;

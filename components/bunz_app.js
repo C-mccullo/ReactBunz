@@ -35,6 +35,7 @@ var BunzApp = React.createClass({
           <div className="header-bar">
             <h2>Welcome, { this.state.currentUser }</h2>
             <Link to="/new-post" > Make a New Post</Link>
+            <Link to="/" > All Post</Link>
             <button className="button nav-log-out" onClick={ this.logout }>Log Out</button>
           </div> 
           
@@ -45,9 +46,6 @@ var BunzApp = React.createClass({
             onDeletePost: this.deletePost,
             currentUser: this.state.currentUser
           })}
-
-          {/* PostList and NewPost will be the Nested Routes of BunzApp (Not Working!) */}
-
         </div>
       )
     }
@@ -86,7 +84,9 @@ var BunzApp = React.createClass({
     newPost.author = this.state.currentUser
     console.log(newPost);
     this.firebaseRef.push(newPost);
+    browserHistory.push('/');  
   },
+
   deletePost: function(id) {
     this.firebaseRef.child(id).remove();
   },
