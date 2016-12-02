@@ -62,28 +62,6 @@ var Login = React.createClass({
       this.setState({error: error.message});
     })
   }
-
-  // login: function() {
-  //   var component = this;
-  //   if (this.state.mode == 'login') {
-  //     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-  //     .then(function() {
-  //       component.props.onLogin(component.state.email);
-  //       browserHistory.push('/')
-  //     })
-  //     .catch(function(error) {
-  //       component.setState({ error: error.message })
-  //     })
-  //   } else {
-  //     firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-  //     .then(function() {
-  //       component.props.onLogin(component.state.email)
-  //     })
-  //     .catch(function(error) {
-  //       component.setState({ error: error.message })
-  //     })
-  //   }
-  // }
 })
 
 export default Login;

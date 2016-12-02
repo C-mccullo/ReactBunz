@@ -1,6 +1,7 @@
 import React from 'react';
 import NewComment from './newComment';
 import PostComment from './postComments';
+import { Link } from 'react-router';
 
 // Import Firebase if you want to Post component to interact with Firebase directly to remove Post
 // import firebase from 'firebase';
@@ -15,7 +16,7 @@ var Post = React.createClass({
           { this.props.post.author == this.props.currentUser ? <button onClick={ this.props.onDeletePost } className="delete">X</button> : null } 
         </div>
         <div className="title">
-          <h3> { this.props.post.title } </h3>
+          <h3> <Link to={"/posts/" + this.props.id }>{ this.props.post.title }</Link> </h3>
           <h5>{ this.props.post.key }</h5>
         </div>
         <div className='author'>
@@ -30,7 +31,7 @@ var Post = React.createClass({
             <h5>{ this.props.post.comments.length } comments</h5> : null
           }
         </div>
-        <NewComment onCommentAdded={ this.props.onCommentAdded }/>
+        {/*<NewComment onCommentAdded={ this.props.onCommentAdded }/>*/}
       </div>
     )
   },

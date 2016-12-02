@@ -6,6 +6,7 @@ import Login from './logIn';
 import PostList from './postList';
 import Post from './post';
 import NewPost from './newPost';
+import IndividualPost from './individualPost';
 
 var BunzApp = React.createClass({
   getInitialState: function() {
@@ -26,8 +27,9 @@ var BunzApp = React.createClass({
   render: function() {
     console.log(this.props.children);
 
+    // Loading Div instead of Log in div to ensure login component does not render before retrieving status from firebase
     if (!this.state.loggedIn) {
-      return <Login onLogin={ this.login } />
+      return <div>Loading...</div>
     } else {
 
       return (
@@ -100,53 +102,27 @@ var BunzApp = React.createClass({
       } else {
         browserHistory.push('/login');
       }
+
+      // Reference to the data of posts that we want in firebase, stored in a variable
+      this.firebaseRef = firebase.database().ref("posts");
+
+      // Assigning a key that firebase generates to the posts in posts array when it is updated
+      this.firebaseRef.on("child_added", (dataSnapshot) => {
+        var posts = this.state.posts;
+        posts[dataSnapshot.key] = dataSnapshot.val();
+        this.setState({ posts: posts });
+        window.scrollTo(0, document.body.clientHeight);
+      });
+      // Removing the post with a certain key from firebase and updating state
+      this.firebaseRef.on("child_removed", (dataSnapshot) => {
+        var posts = this.state.posts;
+
+        delete posts[dataSnapshot.key];
+        this.setState({ posts: posts });
+      });
     })
-    // Reference to the data of posts that we want in firebase, stored in a variable
-    this.firebaseRef = firebase.database().ref("posts");
-
-    // Assigning a key that firebase generates to the posts in posts array when it is updated
-    this.firebaseRef.on("child_added", (dataSnapshot) => {
-      var posts = this.state.posts;
-      posts[dataSnapshot.key] = dataSnapshot.val();
-      this.setState({ posts: posts });
-      window.scrollTo(0, document.body.clientHeight);
-    });
-    // Removing the post with a certain key from firebase and updating state
-    this.firebaseRef.on("child_removed", (dataSnapshot) => {
-      var posts = this.state.posts;
-
-      delete posts[dataSnapshot.key];
-      this.setState({ posts: posts });
-    });
   } 
 })
 
 module.exports = BunzApp;
 
-// { React.cloneElement(this.props.children, {
-//   currentUser: this.state.currentUser,
-//   posts: this.state.posts,
-//   newPost: this.state.newPost,
-//   onCommentAdded: { (comment) => this.addComment(comment,id) },
-//   firebaseRef: this.firebaseRef,
-//   onDeletePost: { (id) => this.deletePost(id) }
-//   // ^ 
-//   // *** add any additional props you want your children to have go here as well ***
-// }) } 
-
-// ******************************************************************************
-//        ↓  T H I S  O N E  W O R K S  I N  R E N D E R  F U N C T I O N ↓
-// ******************************************************************************
-
-// <div className="flex-container">
-//   {/* This is the Working map function for Post right now */}
-//   { Object.keys(posts).map((id) => {
-//     return (
-//       <Post key={id}
-//             currentUser = { this.state.currentUser }
-//             post={ posts[id] } 
-//             onDeletePost = { () => this.deletePost(id) }
-//             onCommentAdded = { (comment) => this.addComment(comment,id) } />
-//     )
-//   })}
-// </div>

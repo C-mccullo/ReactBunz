@@ -11,12 +11,13 @@ var PostList = React.createClass({
           // console.log(posts[id]);
           return (
             <Post key = {id}
+                  id={ id }
                   currentUser = { this.props.currentUser }
                   post = { posts[id] }
                   onDeletePost = { this.deletePost.bind(this, id) }
                   onCommentAdded = { this.addComment.bind(this, id) } />
           )
-        })}
+        }) }
       </div>
     )
   },
